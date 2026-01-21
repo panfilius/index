@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Опросник по корпоративным ценностям</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://formspree.io/js/formbutton-v1.min.js" defer></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --gray-color: #6c757d;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+            padding-bottom: 40px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #1a2530);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .progress-container {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar {
+            height: 12px;
+            background-color: #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--secondary-color), #2980b9);
+            width: 0%;
+            transition: var(--transition);
+        }
+        
+        .value-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--box-shadow);
+            transition: var(--transition);
+        }
+        
+        .value-section.collapsed {
+            padding: 15px 25px;
+        }
+        
+        .value-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .value-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .value-icon {
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .value-section.collapsed .value-icon {
+            transform: rotate(-90deg);
+        }
+        
+        .indicators-container {
+            margin-top: 20px;
+        }
+        
+        .indicator {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .indicator:last-child {
+            border-bottom: none;
+        }
+        
+        .indicator-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .statement-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .statement-option {
+            border: 2px solid #eee;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .statement-option:hover {
+            border-color: var(--secondary-color);
+            background-color: #f8fafc;
+        }
+        
+        .statement-option.selected {
+            border-color: var(--secondary-color);
+            background-color: #e8f4fc;
+            box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+        }
+        
+        .statement-text {
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        
+        .statement-score {
+            font-size: 0.9rem;
+            color: var(--gray-color);
+            font-weight: bold;
+        }
+        
+        .results-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: var(--box-shadow);
+            display: none;
+        }
+        
+        .results-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .result-item {
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: #f8f9fa;
+            border-left: 5px solid var(--secondary-color);
+        }
+        
+        .result-value-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .result-score {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .result-bar {
+            height: 10px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        
+        .result-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--success-color), #2ecc71);
+            width: 0%;
+            transition: var(--transition);
+        }
+        
+        .form-section {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-top: 40px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .form-title {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+        
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        input:focus {
+            border-color: var(--secondary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .required::after {
+            content: " *";
+            color: var(--accent-color);
+        }
+        
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            flex: 1;
+            text-align: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-secondary {
+            background-color: #e9ecef;
+            color: var(--dark-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: #dde1e6;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background-color: #219653;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .message {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--gray-color);
+            font-size: 0.9rem;
+        }
+        
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .value-section, .results-section, .form-section {
+                padding: 20px;
+            }
+            
+            .statement-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .value-title {
+                font-size: 1.3rem;
+            }
+        }
+        
+        /* Анимации */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chart-line"></i> Опросник по корпоративным ценностям</h1>
+            <p class="subtitle">Пожалуйста, ответьте на вопросы для каждой корпоративной ценности. Выберите одно утверждение из четырех предложенных в каждой группе.</p>
+        </header>
+        
+        <div class="progress-container">
+            <div class="progress-header">
+                <div><strong>Прогресс заполнения:</strong> <span id="completed-count">0</span> из 24 индикаторов</div>
+                <div><strong id="progress-percent">0%</strong></div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+        
+        <main id="questionnaire">
+            <!-- Разделы с ценностями будут добавлены с помощью JavaScript -->
+        </main>
+        
+        <section class="results-section" id="results-section">
+            <h2 class="results-title"><i class="fas fa-poll"></i> Результаты оценки ценностей</h2>
+            <div class="results-grid" id="results-container">
+                <!-- Результаты будут добавлены с помощью JavaScript -->
+            </div>
+        </section>
+        
+        <section class="form-section" id="form-section">
+            <h2 class="form-title"><i class="fas fa-envelope"></i> Отправка результатов</h2>
+            <form id="results-form" action="https://formspree.io/f/xwveeyyr" method="POST">
+                <div class="form-group">
+                    <label for="name" class="required">Ваше имя</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email" class="required">Ваш email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="manager-email">Email руководителя (необязательно)</label>
+                    <input type="email" id="manager-email" name="manager-email">
+                </div>
+                
+                <input type="hidden" id="results-data" name="results-data">
+                
+                <div class="buttons">
+                    <button type="button" class="btn btn-secondary" id="calculate-btn">Рассчитать результаты</button>
+                    <button type="submit" class="btn btn-success" id="submit-btn" disabled>Отправить результаты</button>
+                </div>
+                
+                <div class="message" id="form-message"></div>
+            </form>
+            
+            <p class="footer-note">
+                Результаты будут отправлены на email: tatiana.s.panfilova@gmail.com<br>
+                Все данные конфиденциальны и используются только для анализа корпоративных ценностей.
+            </p>
+        </section>
+    </div>
+
+    <script>
+        // Массив с данными о ценностях и индикаторах
+        const values = [
+            { id: 1, name: "Безопасность", color: "#3498db" },
+            { id: 2, name: "На шаг впереди", color: "#9b59b6" },
+            { id: 3, name: "Эффективность", color: "#2ecc71" },
+            { id: 4, name: "Единая команда", color: "#e67e22" },
+            { id: 5, name: "Уважение", color: "#e74c3c" },
+            { id: 6, name: "Ответственность за результат", color: "#1abc9c" }
+        ];
+        
+        // Шаблоны утверждений (заполните реальными текстами утверждений)
+        const statementTemplates = [
+            // Ценность 1: Безопасность
+            [
+                // Индикатор 1.1
+                [
+                    "Строго соблюдаю все правила безопасности без исключений",
+                    "В основном соблюдаю правила безопасности, но иногда делаю исключения",
+                    "Соблюдаю только основные правила безопасности",
+                    "Не придаю большого значения правилам безопасности"
+                ],
+                // Индикатор 1.2
+                [
+                    "Всегда сообщаю о потенциальных рисках, даже если они кажутся незначительными",
+                    "Сообщаю о рисках, только если они серьезные",
+                    "Сообщаю о рисках, если меня об этом попросят",
+                    "Не считаю нужным сообщать о рисках, если они не очевидны"
+                ],
+                // Индикатор 1.3
+                [
+                    "Лично отвечаю за безопасность на своем участке работы",
+                    "Стараюсь соблюдать безопасность, но не чувствую личной ответственности",
+                    "Считаю, что безопасность - это забота руководства",
+                    "Не задумываюсь о безопасности на рабочем месте"
+                ],
+                // Индикатор 1.4
+                [
+                    "Регулярно прохожу обучение по безопасности и применяю новые знания",
+                    "Прохожу обучение, когда это обязательно",
+                    "Не всегда посещаю обучение по безопасности",
+                    "Избегаю обучения по безопасности"
+                ]
+            ],
+            // Ценность 2: На шаг впереди
+            [
+                // Индикатор 2.1
+                [
+                    "Постоянно ищу новые подходы для улучшения работы",
+                    "Иногда предлагаю улучшения, когда вижу явные проблемы",
+                    "Редко предлагаю изменения, предпочитаю привычные методы",
+                    "Не предлагаю изменений, так как считаю текущие процессы оптимальными"
+                ],
+                // Индикатор 2.2
+                [
+                    "Всегда в курсе последних тенденций в нашей отрасли",
+                    "Интересуюсь новыми тенденциями время от времени",
+                    "Редко слежу за отраслевыми новинками",
+                    "Не слежу за тенденциями, работаю по уже известным схемам"
+                ],
+                // Индикатор 2.3
+                [
+                    "Прогнозирую возможные проблемы и заранее разрабатываю решения",
+                    "Замечаю проблемы на ранней стадии и реагирую на них",
+                    "Решаю проблемы, когда они уже возникли",
+                    "Жду, пока проблемы решат другие"
+                ],
+                // Индикатор 2.4
+                [
+                    "Постоянно учусь новому для профессионального роста",
+                    "Учусь, когда это необходимо для текущей работы",
+                    "Редко занимаюсь профессиональным развитием",
+                    "Не вижу необходимости в дополнительном обучении"
+                ]
+            ],
+            // Ценность 3: Эффективность
+            [
+                // Индикатор 3.1
+                [
+                    "Всегда достигаю поставленных целей в установленные сроки",
+                    "Часто достигаю целей, но иногда с небольшими задержками",
+                    "Иногда не укладываюсь в сроки из-за различных обстоятельств",
+                    "Часто не успеваю выполнить задачи в срок"
+                ],
+                // Индикатор 3.2
+                [
+                    "Постоянно оптимизирую свои рабочие процессы для повышения эффективности",
+                    "Иногда вношу улучшения в рабочие процессы",
+                    "Работаю по установленным процедурам без изменений",
+                    "Не задумываюсь об оптимизации рабочих процессов"
+                ],
+                // Индикатор 3.3
+                [
+                    "Тщательно планирую свое рабочее время и придерживаюсь плана",
+                    "Составляю примерный план работы, но не всегда его соблюдаю",
+                    "Редко планирую свое время, работаю по ситуации",
+                    "Не планирую свое рабочее время"
+                ],
+                // Индикатор 3.4
+                [
+                    "Всегда нахожу способы выполнять задачи с минимальными затратами ресурсов",
+                    "Стараюсь экономить ресурсы, но не всегда это получается",
+                    "Не всегда задумываюсь об экономии ресурсов при выполнении задач",
+                    "Считаю, что экономия ресурсов - не моя задача"
+                ]
+            ],
+            // Ценность 4: Единая команда
+            [
+                // Индикатор 4.1
+                [
+                    "Всегда помогаю коллегам, даже если это не входит в мои обязанности",
+                    "Помогаю коллегам, когда у меня есть время и возможность",
+                    "Помогаю только тем коллегам, с которыми у меня хорошие отношения",
+                    "Предпочитаю сосредоточиться только на своих задачах"
+                ],
+                // Индикатор 4.2
+                [
+                    "Активно участвую в командных обсуждениях и делюсь идеями",
+                    "Участвую в обсуждениях, когда есть что сказать",
+                    "Чаще слушаю, чем высказываюсь на командных встречах",
+                    "Стараюсь избегать участия в командных обсуждениях"
+                ],
+                // Индикатор 4.3
+                [
+                    "Всегда ставлю командные цели выше личных интересов",
+                    "Стараюсь находить баланс между командными и личными целями",
+                    "В первую очередь думаю о своих личных целях",
+                    "Считаю, что личные цели всегда важнее командных"
+                ],
+                // Индикатор 4.4
+                [
+                    "Активно способствую созданию позитивной атмосферы в команде",
+                    "Поддерживаю позитивную атмосферу, если другие ее создают",
+                    "Не участвую в создании командной атмосферы",
+                    "Не считаю важной атмосферу в команде"
+                ]
+            ],
+            // Ценность 5: Уважение
+            [
+                // Индикатор 5.1
+                [
+                    "Всегда внимательно выслушиваю мнения коллег, даже если не согласен с ними",
+                    "Выслушиваю мнения коллег, если считаю их компетентными",
+                    "Часто перебиваю коллег, если не согласен с их мнением",
+                    "Не считаю нужным выслушивать мнения, которые отличаются от моего"
+                ],
+                // Индикатор 5.2
+                [
+                    "Всегда тактично высказываю замечания, не задевая личность собеседника",
+                    "Стараюсь быть тактичным, но иногда могу резко высказаться",
+                    "Часто высказываю замечания в резкой форме",
+                    "Считаю, что правда важнее тактичности"
+                ],
+                // Индикатор 5.3
+                [
+                    "Уважаю личное время и границы коллег",
+                    "В основном уважаю границы коллег, но иногда их нарушаю",
+                    "Часто отвлекаю коллег по несущественным вопросам",
+                    "Считаю нормальным обращаться к коллегам в любое время"
+                ],
+                // Индикатор 5.4
+                [
+                    "Признаю и ценю вклад каждого члена команды",
+                    "Ценю вклад только тех, кто сделал значительную работу",
+                    "Редко замечаю вклад других",
+                    "Считаю, что мой вклад всегда важнее других"
+                ]
+            ],
+            // Ценность 6: Ответственность за результат
+            [
+                // Индикатор 6.1
+                [
+                    "Всегда довожу задачи до конца, независимо от сложностей",
+                    "В большинстве случаев довожу задачи до конца",
+                    "Иногда не завершаю задачи при возникновении трудностей",
+                    "Часто бросаю задачи на полпути"
+                ],
+                // Индикатор 6.2
+                [
+                    "Лично отвечаю за результаты своей работы, даже если они неудачные",
+                    "Принимаю ответственность только за успешные результаты",
+                    "Часто ищу оправдания при неудачах",
+                    "Всегда виню обстоятельства или других в неудачах"
+                ],
+                // Индикатор 6.3
+                [
+                    "Всегда анализирую результаты и извлекаю уроки для будущей работы",
+                    "Иногда анализирую результаты, особенно при неудачах",
+                    "Редко анализирую результаты своей работы",
+                    "Не вижу смысла анализировать результаты"
+                ],
+                // Индикатор 6.4
+                [
+                    "Всегда выполняю свои обещания и обязательства",
+                    "Стараюсь выполнять обещания, но иногда не успеваю",
+                    "Часто забываю о своих обещаниях",
+                    "Не придаю значения выполнению обещаний"
+                ]
+            ]
+        ];
+        
+        // Текущие ответы пользователя
+        let userAnswers = {};
+        
+        // Инициализация опросника
+        document.addEventListener('DOMContentLoaded', function() {
+            initQuestionnaire();
+            updateProgress();
+            
+            // Обработчик для отправки формы
+            document.getElementById('results-form').addEventListener('submit', handleFormSubmit);
+            
+            // Обработчик для кнопки расчета результатов
+            document.getElementById('calculate-btn').addEventListener('click', calculateResults);
+        });
+        
+        // Инициализация опросника
+        function initQuestionnaire() {
+            const container = document.getElementById('questionnaire');
+            
+            values.forEach((value, valueIndex) => {
+                // Создаем раздел для каждой ценности
+                const valueSection = document.createElement('div');
+                valueSection.className = 'value-section collapsed';
+                valueSection.id = `value-${value.id}`;
+                
+                // Заголовок раздела
+                const header = document.createElement('div');
+                header.className = 'value-header';
+                
+                const title = document.createElement('h2');
+                title.className = 'value-title';
+                title.textContent = `${value.id}. ${value.name}`;
+                
+                const icon = document.createElement('i');
+                icon.className = 'value-icon fas fa-chevron-down';
+                
+                header.appendChild(title);
+                header.appendChild(icon);
+                
+                // Контейнер для индикаторов
+                const indicatorsContainer = document.createElement('div');
+                indicatorsContainer.className = 'indicators-container';
+                
+                // Создаем 4 индикатора для каждой ценности
+                for (let i = 0; i < 4; i++) {
+                    const indicator = document.createElement('div');
+                    indicator.className = 'indicator';
+                    indicator.id = `value-${value.id}-indicator-${i+1}`;
+                    
+                    const indicatorTitle = document.createElement('h3');
+                    indicatorTitle.className = 'indicator-title';
+                    indicatorTitle.textContent = `Индикатор ${value.id}.${i+1}`;
+                    
+                    const optionsContainer = document.createElement('div');
+                    optionsContainer.className = 'statement-options';
+                    
+                    // Создаем 4 утверждения для каждого индикатора
+                    for (let j = 0; j < 4; j++) {
+                        const option = document.createElement('div');
+                        option.className = 'statement-option';
+                        option.dataset.valueId = value.id;
+                        option.dataset.indicatorIndex = i;
+                        option.dataset.statementIndex = j;
+                        
+                        const statementText = document.createElement('div');
+                        statementText.className = 'statement-text';
+                        statementText.textContent = statementTemplates[valueIndex][i][j];
+                        
+                        const statementScore = document.createElement('div');
+                        statementScore.className = 'statement-score';
+                        statementScore.textContent = `Баллы: ${3 - j}`;
+                        
+                        option.appendChild(statementText);
+                        option.appendChild(statementScore);
+                        
+                        // Обработчик выбора утверждения
+                        option.addEventListener('click', function() {
+                            selectStatement(this);
+                        });
+                        
+                        optionsContainer.appendChild(option);
+                    }
+                    
+                    indicator.appendChild(indicatorTitle);
+                    indicator.appendChild(optionsContainer);
+                    indicatorsContainer.appendChild(indicator);
+                }
+                
+                valueSection.appendChild(header);
+                valueSection.appendChild(indicatorsContainer);
+                container.appendChild(valueSection);
+                
+                // Обработчик сворачивания/разворачивания раздела
+                header.addEventListener('click', function() {
+                    valueSection.classList.toggle('collapsed');
+                    icon.classList.toggle('fa-chevron-down');
+                    icon.classList.toggle('fa-chevron-up');
+                });
+            });
+        }
+        
+        // Выбор утверждения
+        function selectStatement(element) {
+            const valueId = parseInt(element.dataset.valueId);
+            const indicatorIndex = parseInt(element.dataset.indicatorIndex);
+            const statementIndex = parseInt(element.dataset.statementIndex);
+            
+            // Снимаем выделение со всех утверждений в этом индикаторе
+            const indicator = document.getElementById(`value-${valueId}-indicator-${indicatorIndex+1}`);
+            const allOptions = indicator.querySelectorAll('.statement-option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            
+            // Выделяем выбранное утверждение
+            element.classList.add('selected');
+            
+            // Сохраняем ответ пользователя
+            if (!userAnswers[valueId]) {
+                userAnswers[valueId] = {};
+            }
+            
+            userAnswers[valueId][indicatorIndex] = statementIndex;
+            
+            // Обновляем прогресс
+            updateProgress();
+            
+            // Прокручиваем к следующему индикатору, если это не последний
+            if (indicatorIndex < 3) {
+                const nextIndicator = document.getElementById(`value-${valueId}-indicator-${indicatorIndex+2}`);
+                nextIndicator.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } else if (valueId < 6) {
+                // Если это последний индикатор в ценности, переходим к следующей ценности
+                const nextValue = document.getElementById(`value-${valueId+1}`);
+                nextValue.classList.remove('collapsed');
+                nextValue.querySelector('.value-icon').classList.remove('fa-chevron-down');
+                nextValue.querySelector('.value-icon').classList.add('fa-chevron-up');
+                nextValue.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+        
+        // Обновление прогресса заполнения
+        function updateProgress() {
+            // Подсчитываем количество отвеченных индикаторов
+            let answeredCount = 0;
+            const totalIndicators = values.length * 4;
+            
+            values.forEach(value => {
+                if (userAnswers[value.id]) {
+                    answeredCount += Object.keys(userAnswers[value.id]).length;
+                }
+            });
+            
+            // Обновляем отображение прогресса
+            const progressPercent = Math.round((answeredCount / totalIndicators) * 100);
+            document.getElementById('completed-count').textContent = answeredCount;
+            document.getElementById('progress-percent').textContent = `${progressPercent}%`;
+            document.getElementById('progress-fill').style.width = `${progressPercent}%`;
+        }
+        
+        // Расчет результатов
+        function calculateResults() {
+            // Проверяем, все ли индикаторы заполнены
+            let allAnswered = true;
+            values.forEach(value => {
+                if (!userAnswers[value.id] || Object.keys(userAnswers[value.id]).length < 4) {
+                    allAnswered = false;
+                }
+            });
+            
+            if (!allAnswered) {
+                alert('Пожалуйста, ответьте на все вопросы перед расчетом результатов.');
+                return;
+            }
+            
+            // Рассчитываем результаты
+            const results = [];
+            
+            values.forEach(value => {
+                const valueId = value.id;
+                const answers = userAnswers[valueId];
+                
+                // Считаем сумму баллов за ценность
+                let totalScore = 0;
+                for (let i = 0; i < 4; i++) {
+                    const statementIndex = answers[i];
+                    // Баллы: Утверждение 1 = 3 балла, 2 = 2, 3 = 1, 4 = 0
+                    const score = 3 - statementIndex;
+                    totalScore += score;
+                }
+                
+                // Средний балл по ценности
+                const averageScore = totalScore / 4;
+                
+                results.push({
+                    name: value.name,
+                    score: averageScore.toFixed(2),
+                    percent: Math.round((averageScore / 3) * 100),
+                    color: value.color
+                });
+            });
+            
+            // Отображаем результаты
+            displayResults(results);
+            
+            // Прокручиваем к результатам
+            document.getElementById('results-section').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Отображение результатов
+        function displayResults(results) {
+            const container = document.getElementById('results-container');
+            container.innerHTML = '';
+            
+            results.forEach(result => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'result-item fade-in';
+                
+                const valueName = document.createElement('div');
+                valueName.className = 'result-value-name';
+                valueName.textContent = result.name;
+                
+                const score = document.createElement('div');
+                score.className = 'result-score';
+                score.innerHTML = `<span>Средний балл:</span> <strong>${result.score}</strong>`;
+                
+                const bar = document.createElement('div');
+                bar.className = 'result-bar';
+                
+                const fill = document.createElement('div');
+                fill.className = 'result-fill';
+                fill.style.width = `${result.percent}%`;
+                
+                bar.appendChild(fill);
+                
+                resultItem.appendChild(valueName);
+                resultItem.appendChild(score);
+                resultItem.appendChild(bar);
+                
+                container.appendChild(resultItem);
+                
+                // Анимация заполнения прогресс-бара
+                setTimeout(() => {
+                    fill.style.width = `${result.percent}%`;
+                }, 100);
+            });
+            
+            // Показываем секцию с результатами
+            document.getElementById('results-section').style.display = 'block';
+            
+            // Активируем кнопку отправки
+            document.getElementById('submit-btn').disabled = false;
+            
+            // Сохраняем результаты в скрытое поле формы
+            document.getElementById('results-data').value = JSON.stringify(results);
+            
+            // Отправляем данные в iSpring (если используется)
+            if (typeof parent !== 'undefined' && parent.postMessage) {
+                parent.postMessage({
+                    type: 'quizResults',
+                    results: results
+                }, '*');
+            }
+        }
+        
+        // Обработка отправки формы
+        async function handleFormSubmit(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const submitBtn = document.getElementById('submit-btn');
+            const messageDiv = document.getElementById('form-message');
+            
+            // Проверяем валидацию
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            // Блокируем кнопку отправки
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Отправка...';
+            
+            try {
+                // Отправляем данные через Formspree
+                const formData = new FormData(form);
+                
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    // Успешная отправка
+                    messageDiv.textContent = 'Результаты успешно отправлены! Спасибо за участие.';
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    
+                    // Очищаем форму
+                    form.reset();
+                    userAnswers = {};
+                    
+                    // Скрываем результаты
+                    document.getElementById('results-section').style.display = 'none';
+                    
+                    // Сбрасываем опросник
+                    document.querySelectorAll('.statement-option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    
+                    // Обновляем прогресс
+                    updateProgress();
+                    
+                    // Прокручиваем к верху страницы
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    throw new Error('Ошибка при отправке формы');
+                }
+            } catch (error) {
+                // Ошибка отправки
+                messageDiv.textContent = 'Произошла ошибка при отправке результатов. Пожалуйста, попробуйте еще раз.';
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                
+                // Активируем кнопку отправки снова
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Отправить результаты';
+            } finally {
+                // Возвращаем текст кнопки
+                setTimeout(() => {
+                    submitBtn.innerHTML = 'Отправить результаты';
+                }, 2000);
+            }
+        }
+    </script>
+</body>
+</html>
